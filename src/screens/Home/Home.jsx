@@ -1,3 +1,4 @@
+import ArrowRightAltIcon from '@mui/icons-material/ArrowRightAlt';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
@@ -7,6 +8,7 @@ import React, { useState } from "react";
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Tooltip from '@mui/material/Tooltip';
+import WarningIcon from '@mui/icons-material/Warning';
 
 import Barrios from './Barrios/Barrios';
 import Comunas from './Comunas/Comunas';
@@ -29,7 +31,14 @@ const Home = () => {
           </Tabs>
         </Grid>
         <Grid item xs={12} md={4} style={{ textAlign: 'right' }}>
-          Aplique filtros:
+          <IconButton disableRipple>
+            <WarningIcon color='warning' />
+          </IconButton>
+          &nbsp;
+          Aplique primero filtros:
+          <IconButton disableRipple>
+            <ArrowRightAltIcon />
+          </IconButton>
           <Tooltip title="Filtrar mapa">
             <IconButton onClick={() => setOpen(true)} color="primary">
               <FilterListIcon />

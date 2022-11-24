@@ -1,5 +1,3 @@
-import _ from 'lodash';
-
 import Map, { Source, Layer } from 'react-map-gl';
 import PropTypes from 'prop-types';
 import React, { useState, useCallback } from 'react';

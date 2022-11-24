@@ -2,33 +2,28 @@ import _ from 'lodash';
 
 import { toast } from 'react-toastify';
 
-import AsyncSelect from 'react-select/async';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import PropTypes from 'prop-types';
 import React, { useState, useEffect } from "react";
 import Select from 'react-select'
-import Slider from '@mui/material/Slider';
 import Typography from '@mui/material/Typography';
 
-import floatFormat from '../../../floatFormat';
-import getFullColleges from './getFullColleges';
-import getRawStates from './getStates';
 import SideModal from '../../../components/SideModal';
-
-const INITIAL_DATE = '2014-07-04';
+import getAccidentes from '../Comunas/getAccidentes';
 
 const DEFAULT_FORM = {
-  costoMatricula: [10000, 20000],
-  estado: [],
-  universidad: [],
+  year: null,
+  clase: null,
 };
 
-const valuetext = (value) => `$${floatFormat(value)}`;
+const YEARS = [
+  2014, 2015, 2016, 2017, 2018, 2019, 2020
+].map(item => ({ value: item, label: item }));
 
-const Filters = ({ open, setOpen, getColleges, isMap }) => {
+const Filters = ({ open, setOpen, getColleges }) => {
   const [form, setForm] = useState(DEFAULT_FORM);
-  const [states, setStates] = useState([]);
+  const [accidentes, setAccidentes] = useState([]);
 
   const handleClose = () => setOpen(false);
 
@@ -46,26 +41,8 @@ const Filters = ({ open, setOpen, getColleges, isMap }) => {
     }
   });
 
-  const getStates = () => {
-    setStates(getRawStates());
-  }
-
   const search = () => {
-    const { estado, universidad, ...rest } = form;
-
-    const newForm = {
-      ...rest,
-    };
-
-    if (!_.isEmpty(estado)) {
-      newForm.estado = estado.map(({ value }) => value);
-    }
-
-    if (!_.isEmpty(universidad)) {
-      newForm.universidad = universidad.map(({ value }) => value);
-    }
-
-    getColleges(isMap, newForm);
+    getColleges(form);
     toast.success('Filtro aplicado exitosamente!');
     handleClose();
   };
@@ -77,7 +54,7 @@ const Filters = ({ open, setOpen, getColleges, isMap }) => {
   }, [open]);
 
   useEffect(() => {
-    getStates();
+    setAccidentes(getAccidentes());
     // eslint-disable-next-line
   }, []);
 
@@ -89,45 +66,27 @@ const Filters = ({ open, setOpen, getColleges, isMap }) => {
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
               Filtros de búsqueda
             </Typography>
-            <Typography variant="subtitle2" component="div" sx={{ flexGrow: 1 }}>
-              El filtro Rango costo matricula se aplica por defecto deacuerdo al rango indicado
-            </Typography>
           </Grid>
         </Grid>
         <br />
-        <Grid container spacing={3}>
+        <Grid container spacing={5}>
           <Grid item xs={12}>
-            <Typography gutterBottom>Rango costo matricula ($0 - $100.000)</Typography>
-            <Slider
-              getAriaLabel={() => 'Rango costo matricula'}
-              value={form?.costoMatricula}
-              onChange={handlechange}
-              valueLabelDisplay="auto"
-              name="costoMatricula"
-              getAriaValueText={valuetext}
-              min={0}
-              max={100000}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <Typography gutterBottom>Estado</Typography>
+            <Typography gutterBottom>Clase de Accidente *</Typography>
             <Select
-              name='estado'
-              value={form?.estado}
-              onChange={changeSelect('estado')}
-              options={states}
-              isMulti
+              name='clase'
+              value={form?.clase}
+              onChange={changeSelect('clase')}
+              options={accidentes}
+              required
             />
           </Grid>
           <Grid item xs={12}>
-            <Typography gutterBottom>Universidad</Typography>
-            <AsyncSelect
-              name='universidad'
-              onChange={changeSelect('universidad')}
-              value={form?.universidad}
-              loadOptions={getFullColleges}
-              defaultOptions
-              isMulti
+            <Typography gutterBottom>Año *</Typography>
+            <Select
+              name='year'
+              value={form?.year}
+              onChange={changeSelect('year')}
+              options={YEARS}
             />
           </Grid>
           <Grid item xs={12} style={{ textAlign: 'right' }}>
@@ -135,6 +94,7 @@ const Filters = ({ open, setOpen, getColleges, isMap }) => {
               variant="contained"
               color="success"
               onClick={search}
+              disabled={_.isEmpty(form?.clase) || _.isEmpty(form?.year)}
             >
               Buscar
             </Button>
@@ -157,7 +117,6 @@ Filters.propTypes = {
   open: PropTypes.bool.isRequired,
   setOpen: PropTypes.func.isRequired,
   getColleges: PropTypes.func.isRequired,
-  isMap: PropTypes.bool.isRequired,
 };
 
 export default Filters;

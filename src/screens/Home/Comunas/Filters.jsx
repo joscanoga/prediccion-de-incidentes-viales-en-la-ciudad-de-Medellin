@@ -1,6 +1,7 @@
 import _ from 'lodash';
 
 import { toast } from 'react-toastify';
+
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import PropTypes from 'prop-types';
@@ -40,21 +41,7 @@ const Filters = ({ open, setOpen, getColleges }) => {
   });
 
   const search = async () => {
-    const { estado, universidad, ...rest } = form;
-
-    const newForm = {
-      ...rest,
-    };
-
-    if (!_.isEmpty(estado)) {
-      newForm.estado = estado.map(({ value }) => value);
-    }
-
-    if (!_.isEmpty(universidad)) {
-      newForm.universidad = universidad.map(({ value }) => value);
-    }
-
-    const res = await getColleges(newForm);
+    const res = await getColleges(form);
 
     const totalAccidentes = _.sumBy(res, item => item.properties.value);
 
@@ -100,7 +87,7 @@ const Filters = ({ open, setOpen, getColleges }) => {
             />
           </Grid>
           <Grid item xs={12}>
-            <Typography gutterBottom>Clase(s) de Accidente *</Typography>
+            <Typography gutterBottom>Clase de Accidente *</Typography>
             <Select
               name='clase'
               value={form?.clase}

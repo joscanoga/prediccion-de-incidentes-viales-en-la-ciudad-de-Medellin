@@ -1,9 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from "react";
-import Tooltip from '@mui/material/Tooltip';
 
 import Filters from './Filters';
-import floatFormat from '../../../floatFormat';
 import GeoMap from '../../../components/GeoMap/GeoMap';
 import getComunas from './getComunas';
 import Loading from '../../../components/Loading';
